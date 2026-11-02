@@ -19,3 +19,27 @@ Aucune donnée n'est envoyée en ligne : enregistrements et épisodes restent da
 
 - [Fiche atelier](docs/fiche-atelier.pdf) (1h30, 8 enfants, 1 bibliothécaire)
 - [Autorisation parentale d'enregistrement et de diffusion](docs/autorisation-parentale.pdf), à faire valider par le service juridique ou le DPO de la collectivité
+
+## Application ordinateur (Electron)
+
+Les versions macOS (`.dmg` universel), Windows (installateur et version portable) et Linux (`AppImage`, `.deb`) sont publiées dans les [Releases](https://github.com/biblioGironde/Kit-Podcast/releases). L'application donne accès au micro sans réglage et ouvre les PDF dans le lecteur du système.
+
+Les applications ne sont pas signées : au premier lancement, macOS demande d'ouvrir via clic droit → Ouvrir, et Windows SmartScreen via « Informations complémentaires » → « Exécuter quand même ».
+
+### Développement
+
+```bash
+npm install
+npm start          # lancer l'application
+npm run dist       # construire pour le système courant
+```
+
+### Publier une nouvelle version
+
+Mettre à jour `version` dans `package.json`, puis pousser un tag :
+
+```bash
+git tag v1.0.0 && git push origin v1.0.0
+```
+
+Le workflow GitHub Actions construit les trois plateformes et les attache à la release.

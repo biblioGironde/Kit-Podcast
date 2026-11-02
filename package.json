@@ -1,0 +1,47 @@
+{
+  "name": "kit-podcast",
+  "productName": "Kit Podcast",
+  "version": "1.0.0",
+  "description": "Atelier podcast jeunesse en bibliothèque : enregistrement, montage et borne d'écoute au casque",
+  "author": "biblio.gironde",
+  "license": "UNLICENSED",
+  "private": true,
+  "main": "main.js",
+  "homepage": "https://github.com/biblioGironde/Kit-Podcast",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder",
+    "dist:mac": "electron-builder --mac",
+    "dist:win": "electron-builder --win",
+    "dist:linux": "electron-builder --linux"
+  },
+  "devDependencies": {
+    "electron": "33.2.1",
+    "electron-builder": "25.1.8"
+  },
+  "build": {
+    "appId": "fr.gironde.biblio.kitpodcast",
+    "productName": "Kit Podcast",
+    "artifactName": "Kit-Podcast-${version}-${os}-${arch}.${ext}",
+    "directories": { "output": "dist", "buildResources": "build" },
+    "files": ["index.html", "main.js", "docs/**", "build/icon.png"],
+    "publish": [{ "provider": "github", "owner": "biblioGironde", "repo": "Kit-Podcast", "releaseType": "release" }],
+    "mac": {
+      "category": "public.app-category.education",
+      "target": [{ "target": "dmg", "arch": ["universal"] }],
+      "icon": "build/icon.png",
+      "extendInfo": { "NSMicrophoneUsageDescription": "Kit Podcast utilise le micro pour enregistrer les chroniques des enfants." }
+    },
+    "win": {
+      "target": [{ "target": "nsis", "arch": ["x64"] }, { "target": "portable", "arch": ["x64"] }],
+      "icon": "build/icon.png"
+    },
+    "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true },
+    "linux": {
+      "target": ["AppImage", "deb"],
+      "category": "Education",
+      "icon": "build/icon.png",
+      "maintainer": "biblio.gironde"
+    }
+  }
+}
