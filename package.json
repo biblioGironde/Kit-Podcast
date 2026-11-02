@@ -23,25 +23,72 @@
     "appId": "fr.gironde.biblio.kitpodcast",
     "productName": "Kit Podcast",
     "artifactName": "Kit-Podcast-${version}-${os}-${arch}.${ext}",
-    "directories": { "output": "dist", "buildResources": "build" },
-    "files": ["index.html", "main.js", "docs/**", "build/icon.png"],
-    "publish": [{ "provider": "github", "owner": "biblioGironde", "repo": "Kit-Podcast", "releaseType": "release" }],
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "index.html",
+      "main.js",
+      "docs/**",
+      "build/icon.png"
+    ],
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "biblioGironde",
+        "repo": "Kit-Podcast",
+        "releaseType": "release"
+      }
+    ],
     "mac": {
       "category": "public.app-category.education",
-      "target": [{ "target": "dmg", "arch": ["universal"] }],
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "universal"
+          ]
+        }
+      ],
       "icon": "build/icon.png",
-      "extendInfo": { "NSMicrophoneUsageDescription": "Kit Podcast utilise le micro pour enregistrer les chroniques des enfants." }
+      "extendInfo": {
+        "NSMicrophoneUsageDescription": "Kit Podcast utilise le micro pour enregistrer les chroniques des enfants."
+      }
     },
     "win": {
-      "target": [{ "target": "nsis", "arch": ["x64"] }, { "target": "portable", "arch": ["x64"] }],
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
       "icon": "build/icon.png"
     },
-    "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "Kit-Podcast-${version}-win-${arch}-installateur.${ext}"
+    },
     "linux": {
-      "target": ["AppImage", "deb"],
+      "target": [
+        "AppImage",
+        "deb"
+      ],
       "category": "Education",
       "icon": "build/icon.png",
       "maintainer": "biblio.gironde"
+    },
+    "portable": {
+      "artifactName": "Kit-Podcast-${version}-win-${arch}-portable.${ext}"
     }
   }
 }
