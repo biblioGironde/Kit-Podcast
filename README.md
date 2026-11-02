@@ -2,6 +2,15 @@
 
 Webapp de biblio.gironde pour animer un atelier podcast jeunesse en bibliothèque : 8 enfants dès 8 ans enregistrent leurs conseils de lecture, la bibliothécaire monte l'épisode, puis le diffuse sur place au casque.
 
+
+![Kit Podcast, étape Monter : formes d'onde des chroniques, découpe et assemblage de l'épisode](docs/captures/3-monter.png)
+
+| Préparer | Enregistrer | Borne d'écoute |
+| --- | --- | --- |
+| ![Préparer](docs/captures/1-preparer.png) | ![Enregistrer](docs/captures/2-enregistrer.png) | ![Borne d'écoute](docs/captures/4-borne.png) |
+
+*Captures réalisées avec des prénoms et des enregistrements fictifs.*
+
 ## Fonctionnalités
 
 1. **Préparer** : titre de l'épisode, prénoms des chroniqueurs, livres présentés, suivi des autorisations parentales. Accès à la fiche atelier et à l'autorisation parentale en PDF.
