@@ -1,0 +1,716 @@
+<title>Kit Podcast</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Mise en page : une régie de studio radio — bandeau "on air", étapes 1-2-3 en onglets, borne d'écoute plein écran */
+:root{
+  --paper:#eef0f5; --surface:#ffffff; --sunk:#e4e8f1; --ink:#18213a; --muted:#56607c; --line:#d3d9e6;
+  --air:#d8342a; --air-ink:#ffffff; --wave:#34488f; --wave-dim:#b8c1da;
+  --ok:#23864f; --warn:#b97a0c; --off:#8a91a6;
+  --f-display:"Bricolage Grotesque", "Trebuchet MS", system-ui, sans-serif;
+  --f-body:"Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --paper:#0e1322; --surface:#161d33; --sunk:#1d2640; --ink:#e7ebf5; --muted:#9ca5c2; --line:#2a3454;
+  --air:#ff5547; --air-ink:#1a0b09; --wave:#93a8ff; --wave-dim:#3a4670; --ok:#4fc483; --warn:#e6b048; --off:#6c7593; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --paper:#0e1322; --surface:#161d33; --sunk:#1d2640; --ink:#e7ebf5; --muted:#9ca5c2; --line:#2a3454;
+  --air:#ff5547; --air-ink:#1a0b09; --wave:#93a8ff; --wave-dim:#3a4670; --ok:#4fc483; --warn:#e6b048; --off:#6c7593; color-scheme:dark }
+html,body{height:100%}
+body{background:var(--paper);color:var(--ink);font:16px/1.5 var(--f-body);}
+*{box-sizing:border-box}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--wave);outline-offset:2px}
+.wrap{max-width:1100px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
+header.top{display:flex;flex-wrap:wrap;align-items:center;gap:16px 24px;margin-bottom:20px}
+.brand{display:flex;align-items:center;gap:12px;user-select:none}
+.onair{font:800 13px/1 var(--f-display);letter-spacing:.14em;text-transform:uppercase;padding:7px 10px;border-radius:6px;border:2px solid var(--air);color:var(--air)}
+.onair.live{background:var(--air);color:var(--air-ink);animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.6}}
+h1{font:800 clamp(26px,4vw,34px)/1 var(--f-display);margin:0;letter-spacing:-.01em}
+nav.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-left:auto}
+nav.tabs button{border:1px solid var(--line);background:var(--surface);padding:9px 14px;border-radius:999px;cursor:pointer;display:flex;gap:8px;align-items:center;font-weight:700}
+nav.tabs button .n{font:500 12px var(--f-mono);color:var(--muted)}
+nav.tabs button[aria-selected="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+nav.tabs button[aria-selected="true"] .n{color:inherit;opacity:.7}
+h2{font:800 24px/1.15 var(--f-display);margin:0 0 4px;text-wrap:balance}
+h3{font:600 18px/1.2 var(--f-display);margin:0;text-wrap:balance}
+.lead{color:var(--muted);margin:0 0 20px;max-width:65ch}
+.label{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.btn{border:1px solid var(--line);background:var(--surface);padding:9px 14px;border-radius:8px;cursor:pointer;font-weight:700;display:inline-flex;align-items:center;gap:8px;min-height:40px}
+.btn:hover{border-color:var(--muted)}
+a.btn{text-decoration:none;color:var(--ink)}
+.docs{display:flex;flex-direction:column;gap:6px;padding:12px 14px;border-radius:8px;background:var(--sunk)}
+.btn.primary{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.btn.air{background:var(--air);color:var(--air-ink);border-color:var(--air)}
+.btn.ghost{background:transparent}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.grid2{display:grid;grid-template-columns:minmax(0,280px) minmax(0,1fr);gap:20px}
+@media (max-width:760px){.grid2{grid-template-columns:minmax(0,1fr)}}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field input,.field textarea{border:1px solid var(--line);background:var(--paper);border-radius:8px;padding:9px 11px;width:100%}
+.note{font-size:14px;color:var(--muted)}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;padding:3px 9px;border-radius:999px;border:1px solid currentColor;white-space:nowrap}
+.pill.ok{color:var(--ok)} .pill.warn{color:var(--warn)} .pill.off{color:var(--off)}
+.dot{width:9px;height:9px;border-radius:50%;background:currentColor;flex:none}
+/* Préparer */
+.tablewrap{overflow-x:auto}
+table.cast{width:100%;border-collapse:collapse;min-width:680px}
+table.cast th{text-align:left;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:8px;border-bottom:1px solid var(--line)}
+table.cast td{padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:middle}
+table.cast td input[type=text]{border:1px solid transparent;background:transparent;padding:7px 8px;border-radius:6px;width:100%}
+table.cast td input[type=text]:hover,table.cast td input[type=text]:focus{border-color:var(--line);background:var(--paper)}
+table.cast tr.fixed td{color:var(--muted)}
+.switch{display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-size:14px;white-space:nowrap}
+.switch input{width:18px;height:18px;accent-color:var(--ok)}
+.iconbtn{border:none;background:transparent;cursor:pointer;padding:6px 8px;border-radius:6px;color:var(--muted);font-weight:700}
+.iconbtn:hover{background:var(--sunk);color:var(--ink)}
+/* Enregistrer */
+.who{display:flex;flex-direction:column;gap:6px}
+.who button{display:flex;align-items:center;gap:10px;text-align:left;border:1px solid var(--line);background:var(--surface);padding:10px 12px;border-radius:8px;cursor:pointer}
+.who button[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 3px 0 0 var(--air)}
+.who .meta{min-width:0;flex:1}
+.who .meta b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.who .meta span{font-size:13px;color:var(--muted);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.studio{display:flex;flex-direction:column;gap:18px}
+.recbtn{width:132px;height:132px;border-radius:50%;border:6px solid var(--sunk);background:var(--air);color:var(--air-ink);font:800 18px var(--f-display);cursor:pointer;box-shadow:0 0 0 2px var(--air);flex:none}
+.recbtn.stop{background:var(--ink);color:var(--paper);box-shadow:0 0 0 2px var(--ink)}
+.recbtn .sq{display:block;width:30px;height:30px;margin:0 auto 4px;background:currentColor;border-radius:4px}
+.recbtn .ci{display:block;width:30px;height:30px;margin:0 auto 4px;background:currentColor;border-radius:50%}
+.meter{height:22px;border-radius:6px;background:var(--sunk);overflow:hidden;position:relative}
+.meter i{position:absolute;inset:0 auto 0 0;width:0;background:var(--ok);transition:width .06s linear}
+.meter .zone{position:absolute;top:0;bottom:0;border-left:2px dashed var(--muted);opacity:.5}
+.big-timer{font:500 40px/1 var(--f-mono);font-variant-numeric:tabular-nums}
+.trame{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;padding:0;margin:0;list-style:none;counter-reset:t}
+.trame li{counter-increment:t;background:var(--sunk);border-radius:8px;padding:8px 10px;font-size:14px}
+.trame li::before{content:counter(t);font:500 12px var(--f-mono);color:var(--air);margin-right:6px}
+.countdown{font:800 96px/1 var(--f-display);color:var(--air);text-align:center}
+.alert{border:1px solid var(--warn);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--ink);background:var(--sunk)}
+/* Monter */
+.seglist{display:flex;flex-direction:column;gap:10px}
+.seg{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 14px}
+.seg.muted{background:repeating-linear-gradient(135deg,var(--surface) 0 10px,var(--sunk) 10px 20px)}
+.seg .ord{display:flex;flex-direction:column;align-items:center;gap:2px}
+.seg .ord .num{font:500 13px var(--f-mono);color:var(--muted)}
+.seg .head{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.seg .head h3{flex:1;min-width:160px}
+.wave{width:100%;height:64px;display:block;border-radius:6px;background:var(--sunk);cursor:ew-resize;touch-action:none}
+.seg .tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.seg .tools .btn{min-height:34px;padding:5px 10px;font-size:14px}
+.vol{display:flex;align-items:center;gap:6px;font-size:14px}
+.vol input{width:110px;accent-color:var(--wave)}
+.mixbar{position:sticky;bottom:0;margin-top:16px;background:var(--ink);color:var(--paper);border-radius:var(--r);padding:14px 16px;display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;padding-bottom:calc(14px + env(safe-area-inset-bottom,0px))}
+.mixbar .btn{background:var(--paper);color:var(--ink);border-color:var(--paper)}
+.mixbar .btn.air{background:var(--air);color:var(--air-ink);border-color:var(--air)}
+.result{margin-top:16px;display:flex;flex-direction:column;gap:12px}
+.result audio{width:100%}
+.chaps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.chaps li{display:flex;gap:12px;font-size:15px}
+.chaps .mono{color:var(--muted);min-width:48px}
+/* Borne */
+.covers{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
+.cover{border:none;border-radius:14px;padding:18px;min-height:210px;display:flex;flex-direction:column;justify-content:space-between;text-align:left;cursor:pointer;color:#fff;position:relative;overflow:hidden}
+.cover h3{font:800 24px/1.1 var(--f-display);color:#fff}
+.cover .sub{font-size:14px;opacity:.9}
+.cover .mic{position:absolute;right:-14px;bottom:-18px;width:110px;height:110px;opacity:.18}
+.player{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:760px){.player{grid-template-columns:minmax(0,1fr)}}
+.player .art{border-radius:16px;aspect-ratio:1/1;max-width:100%;display:flex;flex-direction:column;justify-content:flex-end;padding:24px;color:#fff}
+.player .art h2{color:#fff;font-size:clamp(26px,4vw,40px)}
+.bigplay{width:110px;height:110px;border-radius:50%;border:none;background:var(--air);color:var(--air-ink);cursor:pointer;display:grid;place-items:center;flex:none}
+.bigplay svg{width:44px;height:44px;fill:currentColor}
+.progress{height:16px;border-radius:8px;background:var(--sunk);position:relative;cursor:pointer;touch-action:none}
+.progress i{position:absolute;inset:0 auto 0 0;background:var(--wave);border-radius:8px;width:0}
+.progress b{position:absolute;top:-4px;width:3px;height:24px;background:var(--muted);border-radius:2px}
+.chapbtns{display:flex;flex-direction:column;gap:8px}
+.chapbtns button{display:flex;gap:12px;align-items:center;text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:12px 14px;cursor:pointer;font-size:17px}
+.chapbtns button[aria-current="true"]{border-color:var(--air);box-shadow:inset 4px 0 0 var(--air)}
+.empty{border:2px dashed var(--line);border-radius:var(--r);padding:28px;text-align:center;color:var(--muted)}
+body.kiosk nav.tabs, body.kiosk .manage{display:none!important}
+body.kiosk .wrap{max-width:none}
+body.kiosk .cover{min-height:260px}
+body.kiosk .chapbtns button{font-size:20px;padding:16px}
+.holdhint{font-size:12px;color:var(--muted)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:8px;font-weight:700;z-index:20;max-width:calc(100% - 32px)}
+.confirm{display:inline-flex;gap:6px;align-items:center;font-size:14px}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand" id="brand" title="En mode borne : maintenir 3 secondes pour quitter">
+      <span class="onair" id="onair">On air</span>
+      <h1>Kit Podcast</h1>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="Étapes">
+      <button role="tab" data-tab="prep" aria-selected="true"><span class="n">1</span>Préparer</button>
+      <button role="tab" data-tab="rec" aria-selected="false"><span class="n">2</span>Enregistrer</button>
+      <button role="tab" data-tab="edit" aria-selected="false"><span class="n">3</span>Monter</button>
+      <button role="tab" data-tab="borne" aria-selected="false"><span class="n">4</span>Borne d'écoute</button>
+    </nav>
+  </header>
+  <main id="view"></main>
+</div>
+<div class="toast" id="toast" hidden></div>
+<input type="file" id="filepick" accept="audio/*,.wav,.mp3,.m4a,.ogg,.webm" hidden>
+<input type="file" id="borneimport" accept=".json,audio/*" hidden>
+
+<script>
+(() => {
+"use strict";
+const SR = 32000;
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const uid = () => Math.random().toString(36).slice(2, 10);
+const fmt = s => { s = Math.max(0, s || 0); const m = Math.floor(s / 60), r = Math.floor(s % 60); return m + ":" + String(r).padStart(2, "0"); };
+const COVERS = ["#c2372e", "#2f4aa0", "#1f7a55", "#8a3fa0", "#b86a12", "#1d6f8a"];
+const MIC_SVG = '<svg class="mic" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M12 15a4 4 0 0 0 4-4V5a4 4 0 0 0-8 0v6a4 4 0 0 0 4 4zm7-4a1 1 0 1 0-2 0 5 5 0 0 1-10 0 1 1 0 1 0-2 0 7 7 0 0 0 6 6.92V21H8a1 1 0 1 0 0 2h8a1 1 0 1 0 0-2h-3v-3.08A7 7 0 0 0 19 11z"/></svg>';
+const PLAY = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>';
+const PAUSE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>';
+
+/* ---------- Stockage local (IndexedDB) ---------- */
+const DB = {
+  db: null,
+  async open() {
+    if (this.db) return this.db;
+    this.db = await new Promise((res, rej) => {
+      const r = indexedDB.open("kit-podcast", 1);
+      r.onupgradeneeded = () => r.result.createObjectStore("kv");
+      r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error);
+    });
+    return this.db;
+  },
+  async get(k) { try { const db = await this.open(); return await new Promise((res, rej) => { const q = db.transaction("kv").objectStore("kv").get(k); q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error); }); } catch (e) { return undefined; } },
+  async set(k, v) { try { const db = await this.open(); await new Promise((res, rej) => { const tx = db.transaction("kv", "readwrite"); tx.objectStore("kv").put(v, k); tx.oncomplete = res; tx.onerror = () => rej(tx.error); }); return true; } catch (e) { return false; } }
+};
+let saveT = null;
+function saveEpisode() { clearTimeout(saveT); saveT = setTimeout(() => DB.set("episode", state.ep), 400); }
+function saveBorne() { return DB.set("borne", state.borne); }
+
+/* ---------- Audio ---------- */
+let AC = null;
+function ac() { if (!AC) AC = new (window.AudioContext || window.webkitAudioContext)(); if (AC.state === "suspended") AC.resume(); return AC; }
+
+async function synth(kind) {
+  const dur = kind === "jingle" ? 4.2 : 1.1;
+  const oc = new OfflineAudioContext(1, Math.ceil(SR * dur), SR);
+  const master = oc.createGain(); master.gain.value = 0.45; master.connect(oc.destination);
+  const note = (f, t, d, type = "triangle", v = 0.5) => {
+    const o = oc.createOscillator(); o.type = type; o.frequency.value = f;
+    const g = oc.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(v, t + 0.02); g.gain.exponentialRampToValueAtTime(0.001, t + d);
+    o.connect(g); g.connect(master); o.start(t); o.stop(t + d + 0.05);
+  };
+  if (kind === "jingle") {
+    [523.25, 659.25, 783.99, 1046.5, 783.99, 1046.5, 1318.5].forEach((f, i) => note(f, 0.15 + i * 0.22, 0.5));
+    [130.81, 174.61, 196, 261.63].forEach((f, i) => note(f, 0.15 + i * 0.44, 0.8, "sine", 0.6));
+    [1046.5, 1318.5, 1567.98].forEach((f, i) => note(f, 1.9, 2.2, "sine", 0.35 - i * 0.07));
+  } else {
+    note(880, 0.05, 0.6, "sine", 0.5); note(1318.5, 0.25, 0.8, "sine", 0.4);
+  }
+  const buf = await oc.startRendering();
+  return { sr: SR, data: buf.getChannelData(0).slice() };
+}
+async function decodeToMono(ab) {
+  const buf = await ac().decodeAudioData(ab);
+  const n = buf.length, ch = buf.numberOfChannels, out = new Float32Array(n);
+  for (let c = 0; c < ch; c++) { const d = buf.getChannelData(c); for (let i = 0; i < n; i++) out[i] += d[i] / ch; }
+  return { sr: buf.sampleRate, data: out };
+}
+function dur(seg) { return seg && seg.data ? seg.data.length / seg.sr : 0; }
+function autoTrim(seg) {
+  const { data, sr } = seg; if (!data) return;
+  const win = Math.max(1, Math.round(sr * 0.02)); let peak = 0;
+  for (let i = 0; i < data.length; i++) { const a = Math.abs(data[i]); if (a > peak) peak = a; }
+  const thr = Math.max(0.008, peak * 0.07); let first = -1, last = -1;
+  for (let i = 0; i < data.length; i += win) {
+    const e = Math.min(i + win, data.length); let s = 0;
+    for (let j = i; j < e; j++) s += data[j] * data[j];
+    if (Math.sqrt(s / (e - i)) > thr) { if (first < 0) first = i; last = e; }
+  }
+  if (first < 0) return;
+  seg.start = Math.max(0, first / sr - 0.15); seg.end = Math.min(dur(seg), last / sr + 0.25);
+}
+function normalize(seg) {
+  const { data, sr } = seg; if (!data) return;
+  const a = Math.floor(seg.start * sr), b = Math.min(data.length, Math.ceil(seg.end * sr)); let pk = 0;
+  for (let i = a; i < b; i++) { const v = Math.abs(data[i]); if (v > pk) pk = v; }
+  if (pk > 0) seg.gain = Math.min(8, Math.round((0.89 / pk) * 100) / 100);
+}
+function encodeWAV(data, sr) {
+  const n = data.length, buf = new ArrayBuffer(44 + n * 2), v = new DataView(buf);
+  const w = (o, s) => { for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); };
+  w(0, "RIFF"); v.setUint32(4, 36 + n * 2, true); w(8, "WAVE"); w(12, "fmt ");
+  v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+  v.setUint32(24, sr, true); v.setUint32(28, sr * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true);
+  w(36, "data"); v.setUint32(40, n * 2, true);
+  for (let i = 0, o = 44; i < n; i++, o += 2) { const s = Math.max(-1, Math.min(1, data[i])); v.setInt16(o, s < 0 ? s * 0x8000 : s * 0x7fff, true); }
+  return new Blob([buf], { type: "audio/wav" });
+}
+
+/* Lecture d'un extrait (prévisualisation) */
+const preview = { src: null, segId: null, t0: 0, from: 0, raf: 0 };
+function stopPreview() {
+  if (preview.src) { try { preview.src.onended = null; preview.src.stop(); } catch (e) {} }
+  preview.src = null; const id = preview.segId; preview.segId = null; cancelAnimationFrame(preview.raf);
+  if (id) { drawWave(id); const b = document.querySelector('[data-act="play"][data-id="' + id + '"]'); if (b) b.textContent = "▶ Écouter"; }
+}
+function playSeg(seg, useTrim = true) {
+  stopPreview(); if (!seg.data) return;
+  const ctx = ac(), b = ctx.createBuffer(1, seg.data.length, seg.sr); b.copyToChannel(seg.data, 0);
+  const s = ctx.createBufferSource(); s.buffer = b; const g = ctx.createGain(); g.gain.value = useTrim ? seg.gain : 1;
+  s.connect(g); g.connect(ctx.destination);
+  const from = useTrim ? seg.start : 0, to = useTrim ? seg.end : dur(seg);
+  s.start(0, from, Math.max(0.05, to - from)); preview.src = s; preview.segId = seg.id; preview.t0 = ctx.currentTime; preview.from = from;
+  s.onended = () => stopPreview();
+  const btn = document.querySelector('[data-act="play"][data-id="' + seg.id + '"]'); if (btn) btn.textContent = "■ Stop";
+  const tick = () => { if (preview.segId !== seg.id) return; drawWave(seg.id, preview.from + (ac().currentTime - preview.t0)); preview.raf = requestAnimationFrame(tick); };
+  tick();
+}
+
+/* ---------- État ---------- */
+function makeSeg(kind, extra = {}) { return Object.assign({ id: uid(), kind, prenom: "", livre: "", auteur: "", autorise: false, sr: SR, data: null, start: 0, end: 0, gain: 1 }, extra); }
+const state = { tab: "prep", ep: null, borne: [], recId: null, take: null, recording: null, result: null, virgule: null, playing: null, kiosk: false };
+
+async function initEpisode() {
+  const saved = await DB.get("episode");
+  if (saved && saved.segments) { state.ep = saved; return; }
+  const j = await synth("jingle");
+  const ep = { title: "Épisode 1 — Nos coups de cœur", desc: "Les lecteurs de 8 à 12 ans conseillent leurs livres préférés.", virgule: true, segments: [] };
+  ep.segments.push(makeSeg("jingle", { prenom: "Générique", sr: j.sr, data: j.data, end: j.data.length / j.sr, autorise: true }));
+  for (let i = 1; i <= 8; i++) ep.segments.push(makeSeg("chronique"));
+  ep.segments.push(makeSeg("outro", { prenom: "Mot de fin", autorise: true }));
+  state.ep = ep; saveEpisode();
+}
+function segLabel(s, i) {
+  if (s.kind === "jingle") return "Générique";
+  if (s.kind === "outro") return "Mot de fin";
+  const n = state.ep.segments.filter(x => x.kind === "chronique").indexOf(s) + 1;
+  return s.prenom ? s.prenom : "Chronique " + n;
+}
+const getSeg = id => state.ep.segments.find(s => s.id === id);
+
+/* ---------- Toast ---------- */
+let toastT;
+function toast(msg) { const t = $("#toast"); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => t.hidden = true, 3200); }
+
+/* ---------- Onglets ---------- */
+document.querySelector("nav.tabs").addEventListener("click", e => {
+  const b = e.target.closest("button[data-tab]"); if (!b) return;
+  setTab(b.dataset.tab);
+});
+function setTab(t) {
+  if (state.recording) { toast("Arrêtez d'abord l'enregistrement en cours."); return; }
+  stopPreview(); state.tab = t;
+  document.querySelectorAll("nav.tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.tab === t));
+  render();
+}
+function render() {
+  const v = $("#view");
+  if (state.tab === "prep") v.innerHTML = viewPrep();
+  else if (state.tab === "rec") v.innerHTML = viewRec();
+  else if (state.tab === "edit") v.innerHTML = viewEdit();
+  else v.innerHTML = viewBorne();
+  requestAnimationFrame(() => document.querySelectorAll("canvas.wave").forEach(c => drawWave(c.dataset.id)));
+  if (state.tab === "borne") bindPlayer();
+}
+
+/* ---------- 1. Préparer ---------- */
+function statusPill(s) {
+  if (s.kind === "chronique" && !s.autorise) return '<span class="pill warn"><span class="dot"></span>Autorisation manquante</span>';
+  if (!s.data) return '<span class="pill off"><span class="dot"></span>À enregistrer</span>';
+  return '<span class="pill ok"><span class="dot"></span>Enregistré · <span class="mono">' + fmt(s.end - s.start) + '</span></span>';
+}
+function viewPrep() {
+  const ep = state.ep, chron = ep.segments.filter(s => s.kind === "chronique");
+  const signed = chron.filter(s => s.autorise).length;
+  let rows = "";
+  ep.segments.forEach(s => {
+    if (s.kind !== "chronique") {
+      rows += `<tr class="fixed"><td><b>${s.kind === "jingle" ? "Générique" : "Mot de fin"}</b></td><td colspan="2">${s.kind === "jingle" ? "Jingle intégré, ou phrase en chœur à enregistrer" : "Lu par la bibliothécaire ou tout le groupe"}</td><td>—</td><td>${statusPill(s)}</td><td><div class="row" style="gap:4px;flex-wrap:nowrap">${s.data ? '<button class="btn" data-act="play" data-id="' + s.id + '">▶ Écouter</button>' : ""}${s.kind === "jingle" ? '<button class="iconbtn" data-act="rejingle">Jingle d\'origine</button>' : ""}</div></td></tr>`;
+      return;
+    }
+    rows += `<tr>
+      <td><input type="text" id="p-${s.id}" data-f="prenom" data-id="${s.id}" value="${esc(s.prenom)}" placeholder="Prénom seul" aria-label="Prénom"></td>
+      <td><input type="text" id="l-${s.id}" data-f="livre" data-id="${s.id}" value="${esc(s.livre)}" placeholder="Titre du livre" aria-label="Titre du livre"></td>
+      <td><input type="text" id="a-${s.id}" data-f="auteur" data-id="${s.id}" value="${esc(s.auteur)}" placeholder="Auteur ou autrice" aria-label="Auteur"></td>
+      <td><label class="switch"><input type="checkbox" id="z-${s.id}" data-f="autorise" data-id="${s.id}" ${s.autorise ? "checked" : ""}>Signée</label></td>
+      <td>${statusPill(s)}</td>
+      <td><button class="iconbtn" data-act="del" data-id="${s.id}" aria-label="Retirer cette ligne">Retirer</button></td></tr>`;
+  });
+  return `<section class="panel" style="display:flex;flex-direction:column;gap:18px">
+    <div><h2>L'épisode et les chroniqueurs</h2><p class="lead">Saisissez le prénom de chaque enfant et le livre qu'il présente. Cochez « Signée » quand l'autorisation parentale est rendue : sans elle, l'enfant enregistre mais sa chronique n'est pas diffusée.</p></div>
+    <div class="docs"><span class="label">Documents de l'atelier</span>
+      <div class="row">
+        <a class="btn" href="docs/fiche-atelier.pdf" target="_blank" rel="noopener">Fiche atelier (PDF)</a>
+        <a class="btn" href="docs/autorisation-parentale.pdf" target="_blank" rel="noopener">Autorisation parentale à imprimer (PDF)</a>
+      </div></div>
+    <div class="row" style="align-items:flex-end">
+      <label class="field" style="flex:2;min-width:240px"><span class="label">Titre de l'épisode</span><input id="ep-title" data-ep="title" value="${esc(ep.title)}"></label>
+      <label class="field" style="flex:3;min-width:240px"><span class="label">Présentation (affichée sur la borne)</span><input id="ep-desc" data-ep="desc" value="${esc(ep.desc)}"></label>
+    </div>
+    <div class="row"><span class="pill ${signed === chron.length && chron.length ? "ok" : "warn"}"><span class="dot"></span><span class="mono">${signed}/${chron.length}</span> autorisations signées</span>
+      <label class="switch"><input type="checkbox" id="ep-virg" data-ep="virgule" ${ep.virgule ? "checked" : ""}>Virgule sonore entre les chroniques</label></div>
+    <div class="tablewrap"><table class="cast"><thead><tr><th>Prénom</th><th>Livre</th><th>Auteur</th><th>Autorisation</th><th>État</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>
+    <div class="row"><button class="btn" data-act="add">+ Ajouter un chroniqueur</button><button class="btn primary" data-goto="rec">Passer à l'enregistrement →</button></div>
+    <p class="note">Tout reste sur cet ordinateur, dans le navigateur. Rien n'est envoyé en ligne.</p>
+  </section>`;
+}
+
+/* ---------- 2. Enregistrer ---------- */
+function viewRec() {
+  const ep = state.ep;
+  if (!state.recId || !getSeg(state.recId)) state.recId = (ep.segments.find(s => s.kind === "chronique" && !s.data) || ep.segments[1] || ep.segments[0]).id;
+  const s = getSeg(state.recId);
+  const list = ep.segments.map(x => `<button data-pick="${x.id}" aria-pressed="${x.id === s.id}">
+      <span class="pill ${x.data ? "ok" : "off"}" style="padding:3px" title="${x.data ? "Enregistré" : "À enregistrer"}"><span class="dot"></span></span>
+      <span class="meta"><b>${esc(segLabel(x))}</b><span>${x.kind === "chronique" ? esc(x.livre || "Livre à préciser") : (x.kind === "jingle" ? "Ouverture" : "Clôture")}</span></span></button>`).join("");
+  const rec = state.recording;
+  let center;
+  if (rec && rec.phase === "count") center = `<div class="countdown" id="cd" aria-live="assertive">${rec.count}</div>`;
+  else center = `<div class="row" style="gap:24px">
+      <button class="recbtn ${rec ? "stop" : ""}" id="recbtn">${rec ? '<span class="sq"></span>Stop' : '<span class="ci"></span>Enregistrer'}</button>
+      <div style="flex:1;min-width:200px;display:flex;flex-direction:column;gap:10px">
+        <div class="big-timer" id="timer">${rec ? "0:00" : "0:00"}<span style="font-size:16px;color:var(--muted)"> / 2:00 conseillées</span></div>
+        <div class="meter" aria-hidden="true"><i id="meterbar"></i><span class="zone" style="left:50%"></span><span class="zone" style="left:85%"></span></div>
+        <div class="note" id="meterlabel" aria-live="polite">${rec ? "" : "La barre doit rester dans le vert pendant qu'on parle."}</div>
+      </div></div>`;
+  const take = state.take && state.take.id === s.id ? `<div class="panel" style="background:var(--sunk);display:flex;flex-direction:column;gap:10px">
+      <div class="row"><h3 style="flex:1">Nouvelle prise · <span class="mono">${fmt(dur(state.take))}</span></h3></div>
+      <canvas class="wave" data-id="__take" style="cursor:default"></canvas>
+      <div class="row"><button class="btn" data-act="playtake">▶ Écouter la prise</button><button class="btn primary" data-act="keep">Garder cette prise</button><button class="btn ghost" data-act="retake">Refaire</button></div></div>` : "";
+  return `<div class="grid2">
+    <aside class="who" aria-label="Qui enregistre ?"><span class="label">Qui passe au micro ?</span>${list}</aside>
+    <section class="panel studio">
+      <div><span class="label">${s.kind === "chronique" ? "Chronique" : s.kind === "jingle" ? "Générique" : "Mot de fin"}</span>
+        <h2>${esc(segLabel(s))}${s.livre ? " · <span style=\"font-weight:600\">" + esc(s.livre) + "</span>" : ""}</h2>
+        ${s.kind === "chronique" && !s.autorise ? '<p class="alert">Autorisation parentale non cochée : l\'enfant peut enregistrer, la chronique ne sera pas diffusée tant que l\'autorisation n\'est pas rendue.</p>' : ""}
+        ${s.data ? '<div class="row"><button class="btn" data-act="play" data-id="' + s.id + '">▶ Écouter</button><span class="note">' + (s.kind === "jingle" ? "Générique actuel" : "Prise actuelle") + ' · ' + fmt(s.end - s.start) + '. Un nouvel enregistrement la remplacera si vous le gardez.</span></div>' : ""}</div>
+      <div id="micmsg"></div>
+      ${center}
+      ${take}
+      ${s.kind === "chronique" ? `<div><span class="label">La trame</span><ol class="trame" style="margin-top:6px"><li>Je me présente (prénom)</li><li>J'accroche</li><li>Titre et auteur</li><li>L'histoire, sans la fin</li><li>Mon avis</li><li>Je le conseille à…</li><li>Ma note</li></ol></div>` : ""}
+      <div class="row"><button class="btn ghost" data-act="import">Importer un fichier audio</button><span class="note">Micro indisponible ? Enregistrez avec un autre appareil puis importez le fichier.</span></div>
+    </section></div>`;
+}
+async function startRecording() {
+  const s = getSeg(state.recId); if (!s) return;
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || !window.MediaRecorder) { micError("Ce navigateur ne permet pas d'enregistrer. Utilisez Chrome, Edge ou Firefox, ou importez un fichier audio."); return; }
+  let stream;
+  try { stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true } }); }
+  catch (e) { micError("Le micro n'est pas accessible ici. Autorisez le micro dans le navigateur, ou ouvrez l'appli installée (GitHub Pages ou version ordinateur). En attendant, importez un fichier audio."); return; }
+  const ctx = ac(), node = ctx.createMediaStreamSource(stream), an = ctx.createAnalyser(); an.fftSize = 2048; node.connect(an);
+  state.recording = { phase: "count", count: 3, stream, an, segId: s.id };
+  render();
+  for (let i = 3; i > 0; i--) { if (!state.recording) return; state.recording.count = i; const cd = $("#cd"); if (cd) cd.textContent = i; await new Promise(r => setTimeout(r, 800)); }
+  if (!state.recording) return;
+  const chunks = []; const mr = new MediaRecorder(stream);
+  mr.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
+  mr.onstop = async () => {
+    stream.getTracks().forEach(t => t.stop());
+    try {
+      const blob = new Blob(chunks, { type: mr.mimeType || "audio/webm" });
+      const d = await decodeToMono(await blob.arrayBuffer());
+      state.take = Object.assign({ id: state.recording ? state.recording.segId : s.id }, d);
+    } catch (e) { toast("La prise n'a pas pu être lue. Réessayez."); }
+    state.recording = null; $("#onair").classList.remove("live"); render();
+  };
+  state.recording.phase = "rec"; state.recording.mr = mr; state.recording.t0 = performance.now();
+  mr.start(250); $("#onair").classList.add("live"); render(); meterLoop();
+}
+function meterLoop() {
+  const r = state.recording; if (!r || r.phase !== "rec") return;
+  const buf = new Float32Array(r.an.fftSize); r.an.getFloatTimeDomainData(buf);
+  let s = 0; for (let i = 0; i < buf.length; i++) s += buf[i] * buf[i];
+  const db = 20 * Math.log10(Math.sqrt(s / buf.length) + 1e-9), pct = Math.max(0, Math.min(1, (db + 60) / 60));
+  const bar = $("#meterbar"), lab = $("#meterlabel"), tm = $("#timer");
+  if (bar) { bar.style.width = (pct * 100) + "%"; bar.style.background = pct > 0.85 ? "var(--air)" : pct > 0.5 ? "var(--ok)" : "var(--warn)"; }
+  if (lab) lab.textContent = pct > 0.85 ? "Trop fort : recule un peu du micro" : pct > 0.5 ? "Parfait" : (pct > 0.2 ? "Un peu plus fort" : "…");
+  const el = (performance.now() - r.t0) / 1000;
+  if (tm) { tm.firstChild.textContent = fmt(el); tm.style.color = el > 120 ? "var(--air)" : ""; }
+  requestAnimationFrame(meterLoop);
+}
+function stopRecording() { const r = state.recording; if (r && r.mr && r.mr.state !== "inactive") r.mr.stop(); }
+function micError(msg) { const m = $("#micmsg"); if (m) m.innerHTML = '<p class="alert">' + esc(msg) + "</p>"; }
+
+/* ---------- 3. Monter ---------- */
+function included(s) { return s.data && (s.kind !== "chronique" || s.autorise); }
+function estTotal() {
+  const ep = state.ep; let t = 0, prev = false;
+  ep.segments.forEach(s => { if (!included(s)) return; if (s.kind === "chronique" && prev && ep.virgule) t += 1.35; t += (s.end - s.start) + 0.35; prev = s.kind === "chronique"; });
+  return t;
+}
+function viewEdit() {
+  const ep = state.ep, n = ep.segments.length;
+  const items = ep.segments.map((s, i) => {
+    const off = s.kind === "chronique" && !s.autorise;
+    if (!s.data) return `<div class="seg"><div class="ord"><span class="num">${String(i + 1).padStart(2, "0")}</span></div>
+      <div class="head"><h3>${esc(segLabel(s))}</h3><span class="pill off"><span class="dot"></span>Pas encore enregistré</span><button class="btn ghost" data-recgo="${s.id}">Enregistrer</button></div></div>`;
+    return `<div class="seg ${off ? "muted" : ""}">
+      <div class="ord"><button class="iconbtn" data-act="up" data-id="${s.id}" ${i === 0 ? "disabled" : ""} aria-label="Monter">▲</button><span class="num">${String(i + 1).padStart(2, "0")}</span><button class="iconbtn" data-act="down" data-id="${s.id}" ${i === n - 1 ? "disabled" : ""} aria-label="Descendre">▼</button></div>
+      <div style="display:flex;flex-direction:column;gap:8px;min-width:0">
+        <div class="head"><h3>${esc(segLabel(s))}${s.livre ? ' <span style="font-weight:600;color:var(--muted)">· ' + esc(s.livre) + "</span>" : ""}</h3>
+          ${off ? '<span class="pill warn"><span class="dot"></span>Non diffusé : autorisation manquante</span>' : ""}
+          <span class="mono note" id="len-${s.id}">${fmt(s.start)} → ${fmt(s.end)} · ${fmt(s.end - s.start)}</span></div>
+        <canvas class="wave" data-id="${s.id}" aria-label="Forme d'onde : glissez pour couper le début ou la fin"></canvas>
+        <div class="tools">
+          <button class="btn" data-act="play" data-id="${s.id}">▶ Écouter</button>
+          <button class="btn" data-act="trim" data-id="${s.id}">Couper les blancs</button>
+          <button class="btn" data-act="norm" data-id="${s.id}">Normaliser</button>
+          <button class="btn ghost" data-act="reset" data-id="${s.id}">Tout garder</button>
+          <label class="vol">Volume <input type="range" id="g-${s.id}" min="0.2" max="4" step="0.05" value="${Math.min(4, s.gain)}" data-gain="${s.id}"><span class="mono" id="gv-${s.id}">×${s.gain.toFixed(2)}</span></label>
+        </div></div></div>`;
+  }).join("");
+  const chron = ep.segments.filter(s => s.kind === "chronique");
+  const live = chron.filter(included).length;
+  const res = state.result ? `<div class="panel result" id="result">
+      <div class="row"><h3 style="flex:1">${esc(ep.title)} · <span class="mono">${fmt(state.result.duration)}</span></h3></div>
+      <audio controls src="${state.result.url}"></audio>
+      <ol class="chaps">${state.result.chapters.map(c => `<li><span class="mono">${fmt(c.t)}</span>${esc(c.label)}</li>`).join("")}</ol>
+      <div class="row"><button class="btn air" data-act="toborne">Envoyer sur la borne d'écoute</button><button class="btn" data-act="wav">Télécharger le WAV</button><button class="btn" data-act="pack">Paquet pour une autre borne (.json)</button></div>
+      <p class="note" id="dlnote">Le paquet .json se charge sur la borne d'un autre poste, avec ses chapitres.</p></div>` : "";
+  return `<div><h2>Montage</h2><p class="lead">Glissez sur la forme d'onde pour couper le début ou la fin, ou laissez « Couper les blancs » le faire. Réordonnez avec les flèches. Les chroniques sans autorisation sont ignorées à l'export.</p></div>
+    <div class="seglist">${items}</div>
+    <div class="mixbar"><span><b class="mono">${fmt(estTotal())}</b> estimées</span><span><b class="mono">${live}/${chron.length}</b> chroniques diffusées</span>
+      <span style="flex:1"></span><button class="btn" data-act="trimall">Couper tous les blancs</button><button class="btn air" data-act="assemble">Assembler l'épisode</button></div>
+    ${res}`;
+}
+let virgCache = null;
+async function assemble() {
+  const ep = state.ep, parts = [], chapters = [];
+  if (ep.virgule && !virgCache) virgCache = await synth("virgule");
+  let t = 0.2, prev = false;
+  ep.segments.forEach(s => {
+    if (!included(s)) return;
+    if (s.kind === "chronique" && prev && ep.virgule) { parts.push({ seg: virgCache, start: 0, end: dur(virgCache), gain: 1, t }); t += dur(virgCache) + 0.25; }
+    const label = s.kind === "chronique" ? (s.prenom || "Chronique") + (s.livre ? " · " + s.livre : "") : segLabel(s);
+    chapters.push({ t, label }); parts.push({ seg: s, start: s.start, end: s.end, gain: s.gain, t });
+    t += (s.end - s.start) + 0.35; prev = s.kind === "chronique";
+  });
+  if (!parts.length) { toast("Rien à assembler : enregistrez au moins une prise autorisée."); return null; }
+  const oc = new OfflineAudioContext(1, Math.ceil(SR * (t + 0.6)), SR);
+  const comp = oc.createDynamicsCompressor(); comp.threshold.value = -12; comp.ratio.value = 4; comp.attack.value = 0.005; comp.release.value = 0.2; comp.connect(oc.destination);
+  parts.forEach(p => {
+    const b = oc.createBuffer(1, p.seg.data.length, p.seg.sr); b.copyToChannel(p.seg.data, 0);
+    const src = oc.createBufferSource(); src.buffer = b; const g = oc.createGain(); g.gain.value = p.gain;
+    src.connect(g); g.connect(comp); src.start(p.t, p.start, Math.max(0.05, p.end - p.start));
+  });
+  const out = await oc.startRendering(); const data = out.getChannelData(0).slice();
+  let pk = 0; for (let i = 0; i < data.length; i++) { const a = Math.abs(data[i]); if (a > pk) pk = a; }
+  if (pk > 0) { const k = 0.89 / pk; for (let i = 0; i < data.length; i++) data[i] *= k; }
+  const wav = encodeWAV(data, SR);
+  if (state.result && state.result.url) URL.revokeObjectURL(state.result.url);
+  return { wav, url: URL.createObjectURL(wav), chapters, duration: data.length / SR };
+}
+
+/* Formes d'onde */
+const peaksCache = new Map();
+function drawWave(id, playhead) {
+  const c = document.querySelector('canvas.wave[data-id="' + id + '"]'); if (!c) return;
+  const s = id === "__take" ? Object.assign({ start: 0, end: dur(state.take) }, state.take) : getSeg(id);
+  if (!s || !s.data) return;
+  const dpr = window.devicePixelRatio || 1, W = Math.max(50, Math.round(c.clientWidth * dpr)), H = Math.round(64 * dpr);
+  if (c.width !== W || c.height !== H) { c.width = W; c.height = H; }
+  const x = c.getContext("2d"), cs = getComputedStyle(document.documentElement);
+  const colOn = cs.getPropertyValue("--wave").trim(), colOff = cs.getPropertyValue("--wave-dim").trim(), colHead = cs.getPropertyValue("--air").trim();
+  const key = id + ":" + W + ":" + s.data.length;
+  let pk = peaksCache.get(key);
+  if (!pk) { pk = new Float32Array(W * 2); const step = s.data.length / W;
+    for (let i = 0; i < W; i++) { let mn = 1, mx = -1; const a = Math.floor(i * step), b = Math.min(s.data.length, Math.floor((i + 1) * step) + 1);
+      for (let j = a; j < b; j++) { const v = s.data[j]; if (v < mn) mn = v; if (v > mx) mx = v; } pk[i * 2] = mn; pk[i * 2 + 1] = mx; }
+    peaksCache.set(key, pk); }
+  x.clearRect(0, 0, W, H); const D = dur(s), xs = s.start / D * W, xe = s.end / D * W, g = id === "__take" ? 1 : Math.min(3, s.gain);
+  for (let i = 0; i < W; i++) {
+    x.fillStyle = (i >= xs && i <= xe) ? colOn : colOff;
+    const mn = Math.max(-1, pk[i * 2] * g), mx = Math.min(1, pk[i * 2 + 1] * g);
+    const y1 = (1 - mx) * H / 2, y2 = (1 - mn) * H / 2; x.fillRect(i, y1, 1, Math.max(1, y2 - y1));
+  }
+  if (id !== "__take") { x.fillStyle = colHead; x.fillRect(xs - dpr, 0, 2 * dpr, H); x.fillRect(xe - dpr, 0, 2 * dpr, H); }
+  if (playhead != null) { x.fillStyle = cs.getPropertyValue("--ink").trim(); x.fillRect(playhead / D * W, 0, 2 * dpr, H); }
+}
+let drag = null;
+document.addEventListener("pointerdown", e => {
+  const c = e.target.closest && e.target.closest("canvas.wave"); if (!c || c.dataset.id === "__take") return;
+  const s = getSeg(c.dataset.id); if (!s) return;
+  const r = c.getBoundingClientRect(), t = (e.clientX - r.left) / r.width * dur(s);
+  drag = { s, c, which: Math.abs(t - s.start) < Math.abs(t - s.end) ? "start" : "end" };
+  c.setPointerCapture(e.pointerId); moveDrag(e);
+});
+function moveDrag(e) {
+  if (!drag) return; const { s, c } = drag, r = c.getBoundingClientRect();
+  const t = Math.max(0, Math.min(dur(s), (e.clientX - r.left) / r.width * dur(s)));
+  if (drag.which === "start") s.start = Math.min(t, s.end - 0.2); else s.end = Math.max(t, s.start + 0.2);
+  drawWave(s.id); const l = $("#len-" + s.id); if (l) l.textContent = fmt(s.start) + " → " + fmt(s.end) + " · " + fmt(s.end - s.start);
+}
+document.addEventListener("pointermove", moveDrag);
+document.addEventListener("pointerup", () => { if (drag) { drag = null; saveEpisode(); } });
+window.addEventListener("resize", () => document.querySelectorAll("canvas.wave").forEach(c => drawWave(c.dataset.id)));
+
+/* ---------- 4. Borne d'écoute ---------- */
+function viewBorne() {
+  if (state.playing) {
+    const e = state.borne.find(x => x.id === state.playing); if (!e) { state.playing = null; return viewBorne(); }
+    return `<div class="player">
+      <div class="art" style="background:${e.color}"><span class="label" style="color:#fff;opacity:.85">Podcast des lecteurs</span><h2>${esc(e.title)}</h2><p style="margin:6px 0 0">${esc(e.desc || "")}</p></div>
+      <div style="display:flex;flex-direction:column;gap:18px">
+        <div class="row" style="gap:20px"><button class="bigplay" id="bp" aria-label="Lecture">${PLAY}</button>
+          <div style="flex:1;min-width:180px;display:flex;flex-direction:column;gap:10px">
+            <div class="progress" id="prog" role="slider" aria-label="Position" tabindex="0"><i id="progbar"></i>${e.chapters.slice(1).map(c => `<b style="left:${(c.t / e.duration * 100).toFixed(2)}%"></b>`).join("")}</div>
+            <div class="row mono" style="justify-content:space-between"><span id="tcur">0:00</span><span>${fmt(e.duration)}</span></div>
+            <label class="vol">Volume <input type="range" id="bvol" min="0" max="1" step="0.05" value="0.6"></label></div></div>
+        ${e.chapters.length ? `<div class="chapbtns" id="chaps">${e.chapters.map((c, i) => `<button data-seek="${c.t}" data-ci="${i}"><span class="mono" style="color:var(--muted)">${fmt(c.t)}</span><span>${esc(c.label)}</span></button>`).join("")}</div>` : ""}
+        <div class="row"><button class="btn" data-act="back">← Tous les épisodes</button></div>
+        <audio id="baudio" src="${e.url}" preload="auto"></audio>
+      </div></div>`;
+  }
+  const cards = state.borne.map(e => `<div style="display:flex;flex-direction:column;gap:6px">
+      <button class="cover" style="background:${e.color}" data-open="${e.id}">${MIC_SVG}<span class="sub">${e.chapters.filter(c => c.label.includes("·")).length || "—"} conseils de lecture</span><span><h3>${esc(e.title)}</h3><span class="sub mono">${fmt(e.duration)}</span></span></button>
+      <div class="manage row" style="justify-content:space-between"><span class="note">Ajouté le ${new Date(e.createdAt).toLocaleDateString("fr-FR")}</span>
+        <span id="del-${e.id}"><button class="iconbtn" data-askdel="${e.id}">Supprimer</button></span></div></div>`).join("");
+  return `<div class="row" style="align-items:flex-end;margin-bottom:16px">
+      <div style="flex:1;min-width:240px"><h2>${state.kiosk ? "Écoute au casque" : "Borne d'écoute"}</h2>
+      <p class="lead" style="margin:0">${state.kiosk ? "Mets le casque, choisis un épisode et appuie sur lecture." : "Les épisodes envoyés depuis le montage apparaissent ici. Le mode borne passe en plein écran et masque le montage ; pour en sortir, maintenez 3 secondes le logo « On air »."}</p></div>
+      <div class="manage row"><button class="btn" data-act="bimport">Importer un épisode</button><button class="btn primary" data-act="kiosk">Lancer le mode borne</button></div></div>
+    ${state.borne.length ? `<div class="covers">${cards}</div>` : `<div class="empty"><h3>Aucun épisode sur la borne</h3><p>Assemblez un épisode à l'étape 3 puis « Envoyer sur la borne », ou importez un paquet .json ou un fichier audio.</p></div>`}`;
+}
+let idleT = null;
+function bindPlayer() {
+  const a = $("#baudio"); if (!a) return;
+  const e = state.borne.find(x => x.id === state.playing);
+  const bp = $("#bp"), bar = $("#progbar"), tc = $("#tcur"), vol = $("#bvol");
+  a.volume = Math.min(0.85, +vol.value);
+  vol.oninput = () => { a.volume = Math.min(0.85, +vol.value); };
+  bp.onclick = () => { if (a.paused) a.play().catch(() => {}); else a.pause(); };
+  a.onplay = () => { bp.innerHTML = PAUSE; bp.setAttribute("aria-label", "Pause"); };
+  a.onpause = () => { bp.innerHTML = PLAY; bp.setAttribute("aria-label", "Lecture"); };
+  a.ontimeupdate = () => {
+    const d = a.duration || e.duration; bar.style.width = (a.currentTime / d * 100) + "%"; tc.textContent = fmt(a.currentTime);
+    let ci = -1; e.chapters.forEach((c, i) => { if (a.currentTime >= c.t - 0.05) ci = i; });
+    document.querySelectorAll("#chaps button").forEach(b => b.setAttribute("aria-current", +b.dataset.ci === ci));
+  };
+  a.onended = () => { a.currentTime = 0; };
+  const prog = $("#prog");
+  const seekAt = ev => { const r = prog.getBoundingClientRect(); a.currentTime = Math.max(0, Math.min(1, (ev.clientX - r.left) / r.width)) * (a.duration || e.duration); };
+  prog.onpointerdown = ev => { prog.setPointerCapture(ev.pointerId); seekAt(ev); prog.onpointermove = seekAt; };
+  prog.onpointerup = () => { prog.onpointermove = null; };
+  prog.onkeydown = ev => { if (ev.key === "ArrowRight") a.currentTime += 10; if (ev.key === "ArrowLeft") a.currentTime -= 10; };
+}
+function resetIdle() {
+  clearTimeout(idleT);
+  if (!state.kiosk) return;
+  idleT = setTimeout(() => { const a = $("#baudio"); if (a && !a.paused) { resetIdle(); return; } if (state.playing) { state.playing = null; render(); } }, 120000);
+}
+["pointerdown", "keydown"].forEach(t => document.addEventListener(t, resetIdle));
+async function enterKiosk() {
+  state.kiosk = true; document.body.classList.add("kiosk"); state.playing = null; render();
+  try { await document.documentElement.requestFullscreen(); } catch (e) {}
+  try { if (navigator.wakeLock) state.wake = await navigator.wakeLock.request("screen"); } catch (e) {}
+  toast("Mode borne : maintenez « On air » 3 secondes pour quitter."); resetIdle();
+}
+function exitKiosk() {
+  state.kiosk = false; document.body.classList.remove("kiosk");
+  try { if (document.fullscreenElement) document.exitFullscreen(); } catch (e) {}
+  try { state.wake && state.wake.release(); } catch (e) {}
+  render(); toast("Mode borne quitté.");
+}
+let holdT = null;
+$("#brand").addEventListener("pointerdown", () => { if (!state.kiosk) return; holdT = setTimeout(exitKiosk, 3000); });
+["pointerup", "pointerleave", "pointercancel"].forEach(t => $("#brand").addEventListener(t, () => clearTimeout(holdT)));
+
+async function addToBorne(entry) {
+  entry.url = URL.createObjectURL(entry.wav);
+  state.borne.unshift(entry);
+  const ok = await DB.set("borne", state.borne.map(({ url, ...rest }) => rest));
+  if (!ok) toast("Épisode ajouté pour cette session (stockage du navigateur indisponible).");
+}
+function blobToB64(blob) { return new Promise(res => { const r = new FileReader(); r.onload = () => res(String(r.result).split(",")[1]); r.readAsDataURL(blob); }); }
+function b64ToBlob(b64, type) { const bin = atob(b64), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return new Blob([u], { type }); }
+let dlCap;
+async function offerFile(filename, blob) {
+  if (dlCap === undefined) { try { dlCap = window.claude && window.claude.use ? await window.claude.use("downloads") : null; } catch (e) { dlCap = null; } }
+  if (dlCap) {
+    try { await dlCap.save({ filename, data: blob }); toast("Fichier proposé au téléchargement."); return; }
+    catch (e) { if (e && e.code === "declined") return; if (e && (e.code === "rejected_extension" || e.code === "extension_not_enabled")) { toast("Ce format ne se télécharge pas dans l'aperçu : utilisez le paquet .json ou l'appli installée."); return; } }
+  }
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+}
+const slug = s => (s || "episode").normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "").toLowerCase();
+
+/* ---------- Événements ---------- */
+document.addEventListener("input", e => {
+  const t = e.target;
+  if (t.dataset.f) { const s = getSeg(t.dataset.id); if (!s) return; s[t.dataset.f] = t.type === "checkbox" ? t.checked : t.value; saveEpisode(); if (t.type === "checkbox") render(); }
+  else if (t.dataset.ep) { state.ep[t.dataset.ep] = t.type === "checkbox" ? t.checked : t.value; saveEpisode(); }
+  else if (t.dataset.gain) { const s = getSeg(t.dataset.gain); s.gain = +t.value; $("#gv-" + s.id).textContent = "×" + s.gain.toFixed(2); drawWave(s.id); saveEpisode(); }
+});
+document.addEventListener("click", async e => {
+  const t = e.target.closest("button"); if (!t) return;
+  if (t.dataset.goto) return setTab(t.dataset.goto);
+  if (t.dataset.recgo) { state.recId = t.dataset.recgo; return setTab("rec"); }
+  if (t.dataset.pick) { if (state.recording) return; state.recId = t.dataset.pick; state.take = null; return render(); }
+  if (t.dataset.open) { state.playing = t.dataset.open; return render(); }
+  if (t.dataset.seek != null) { const a = $("#baudio"); if (a) { a.currentTime = +t.dataset.seek; a.play().catch(() => {}); } return; }
+  if (t.dataset.askdel) { $("#del-" + t.dataset.askdel).innerHTML = `<span class="confirm">Supprimer ? <button class="iconbtn" data-dodel="${t.dataset.askdel}" style="color:var(--air)">Oui</button><button class="iconbtn" data-act="cancelDel">Non</button></span>`; return; }
+  if (t.dataset.dodel) { const i = state.borne.findIndex(x => x.id === t.dataset.dodel); if (i >= 0) { URL.revokeObjectURL(state.borne[i].url); state.borne.splice(i, 1); await DB.set("borne", state.borne.map(({ url, ...r }) => r)); } return render(); }
+  if (t.id === "recbtn") return state.recording ? stopRecording() : startRecording();
+  const id = t.dataset.id, s = id && getSeg(id);
+  switch (t.dataset.act) {
+    case "add": state.ep.segments.splice(state.ep.segments.length - 1, 0, makeSeg("chronique")); saveEpisode(); render(); setTimeout(() => { const ins = document.querySelectorAll('input[data-f="prenom"]'); ins[ins.length - 1] && ins[ins.length - 1].focus(); }, 0); break;
+    case "del": state.ep.segments = state.ep.segments.filter(x => x.id !== id); saveEpisode(); render(); break;
+    case "rejingle": { const j = await synth("jingle"), g = state.ep.segments.find(x => x.kind === "jingle"); Object.assign(g, { sr: j.sr, data: j.data, start: 0, end: dur(j), gain: 1 }); peaksCache.clear(); saveEpisode(); render(); toast("Jingle d'origine rétabli."); break; }
+    case "import": $("#filepick").click(); break;
+    case "playtake": if (preview.segId === "__take") stopPreview(); else { const tk = state.take; playSeg({ id: "__take", sr: tk.sr, data: tk.data, start: 0, end: dur(tk), gain: 1 }); } break;
+    case "keep": { const seg = getSeg(state.take.id); Object.assign(seg, { sr: state.take.sr, data: state.take.data, gain: 1 }); seg.start = 0; seg.end = dur(seg); autoTrim(seg); normalize(seg); state.take = null; peaksCache.clear(); saveEpisode();
+      const next = state.ep.segments.find(x => x.kind === "chronique" && !x.data); if (next) state.recId = next.id; render(); toast("Prise gardée, blancs coupés et volume ajusté."); break; }
+    case "retake": state.take = null; render(); break;
+    case "play": if (preview.segId === id) stopPreview(); else playSeg(s); break;
+    case "trim": autoTrim(s); drawWave(id); saveEpisode(); render(); break;
+    case "norm": normalize(s); saveEpisode(); render(); break;
+    case "reset": s.start = 0; s.end = dur(s); s.gain = 1; saveEpisode(); render(); break;
+    case "trimall": state.ep.segments.forEach(x => { if (x.data && x.kind !== "jingle") { autoTrim(x); normalize(x); } }); saveEpisode(); render(); toast("Blancs coupés et volumes égalisés."); break;
+    case "up": case "down": { const a = state.ep.segments, i = a.findIndex(x => x.id === id), j = t.dataset.act === "up" ? i - 1 : i + 1; if (j < 0 || j >= a.length) break; [a[i], a[j]] = [a[j], a[i]]; saveEpisode(); render(); break; }
+    case "assemble": { stopPreview(); t.disabled = true; t.textContent = "Assemblage…"; const r = await assemble(); if (r) { state.result = r; render(); $("#result") && $("#result").scrollIntoView({ behavior: "smooth", block: "start" }); } else render(); break; }
+    case "toborne": { const r = state.result; await addToBorne({ id: uid(), title: state.ep.title, desc: state.ep.desc, color: COVERS[state.borne.length % COVERS.length], chapters: r.chapters, duration: r.duration, wav: r.wav, createdAt: Date.now() }); toast("Épisode ajouté à la borne d'écoute."); break; }
+    case "wav": offerFile(slug(state.ep.title) + ".wav", state.result.wav); break;
+    case "pack": { t.disabled = true; const r = state.result; const pack = { format: "kit-podcast-episode", version: 1, title: state.ep.title, desc: state.ep.desc, chapters: r.chapters, duration: r.duration, wav: await blobToB64(r.wav) }; t.disabled = false; offerFile(slug(state.ep.title) + ".json", new Blob([JSON.stringify(pack)], { type: "application/json" })); break; }
+    case "kiosk": enterKiosk(); break;
+    case "back": state.playing = null; render(); break;
+    case "bimport": $("#borneimport").click(); break;
+    case "cancelDel": render(); break;
+  }
+});
+$("#filepick").addEventListener("change", async e => {
+  const f = e.target.files[0]; e.target.value = ""; if (!f) return;
+  try { const d = await decodeToMono(await f.arrayBuffer()); state.take = Object.assign({ id: state.recId }, d); render(); }
+  catch (err) { toast("Ce fichier audio n'a pas pu être lu."); }
+});
+$("#borneimport").addEventListener("change", async e => {
+  const f = e.target.files[0]; e.target.value = ""; if (!f) return;
+  try {
+    if (/\.json$/i.test(f.name)) {
+      const p = JSON.parse(await f.text()); if (p.format !== "kit-podcast-episode") throw 0;
+      await addToBorne({ id: uid(), title: p.title, desc: p.desc, color: COVERS[state.borne.length % COVERS.length], chapters: p.chapters || [], duration: p.duration, wav: b64ToBlob(p.wav, "audio/wav"), createdAt: Date.now() });
+    } else {
+      const d = await decodeToMono(await f.arrayBuffer());
+      await addToBorne({ id: uid(), title: f.name.replace(/\.[^.]+$/, ""), desc: "", color: COVERS[state.borne.length % COVERS.length], chapters: [], duration: dur(d), wav: f, createdAt: Date.now() });
+    }
+    render(); toast("Épisode importé sur la borne.");
+  } catch (err) { toast("Fichier non reconnu : choisissez un paquet .json du Kit Podcast ou un fichier audio."); }
+});
+
+/* ---------- Démarrage ---------- */
+(async () => {
+  $("#view").innerHTML = '<p class="note">Chargement du studio…</p>';
+  await initEpisode();
+  const b = await DB.get("borne");
+  if (Array.isArray(b)) state.borne = b.map(x => Object.assign(x, { url: URL.createObjectURL(x.wav) }));
+  render();
+})();
+})();
+</script>
