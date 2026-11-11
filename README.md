@@ -52,3 +52,8 @@ git tag v1.0.0 && git push origin v1.0.0
 ```
 
 Le workflow GitHub Actions construit les trois plateformes et les attache à la release.
+
+## Licences
+
+- **Code** : © Département de la Gironde — biblio.gironde, sous licence [GNU Affero General Public License v3.0](LICENSE) ou ultérieure (AGPL-3.0-or-later). Vous pouvez le réutiliser et le modifier ; toute version modifiée, redistribuée ou mise en ligne, doit être publiée sous la même licence, avec son code source.
+- **Fiches et documentation (`docs/`)** : [Licence Ouverte Etalab 2.0](https://www.etalab.gouv.fr/licence-ouverte-open-licence/), réutilisation libre, y compris commerciale, avec mention de la source « biblio.gironde ».
