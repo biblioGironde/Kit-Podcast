@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "description": "Atelier podcast jeunesse en bibliothèque : enregistrement, montage et borne d'écoute au casque",
   "author": "biblio.gironde",
-  "license": "UNLICENSED",
+  "license": "AGPL-3.0-or-later",
   "private": true,
   "main": "main.js",
   "homepage": "https://github.com/biblioGironde/Kit-Podcast",
